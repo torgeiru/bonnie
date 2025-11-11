@@ -174,7 +174,7 @@ extern "C"
   }
 }
 
-int libbonnie_entry(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   int    file_size = DefaultFileSize;
   int    directory_size = DefaultDirectorySize;
