@@ -61,40 +61,7 @@ void Fork::go(FUNCTION func, PVOID param, int num)
   td->f = NULL;
   td->param = param;
   td->func = func;
-  for(int i = 0; i < num; i++)
-  {
-#ifdef OS2
-    THREAD_DATA *tmp = new THREAD_DATA;
-    memcpy(tmp, td, sizeof(THREAD_DATA));
-#endif
-    td->threadNum = i;
-#ifdef OS2
-    // yes I know I am casting a pointer to an unsigned long
-    // it's the way you're supposed to do things in OS/2
-    TID id = 0;
-    if(DosCreateThread(&id, thread_func, ULONG(td), CREATE_READY, 32*1024))
-    {
-      fprintf(stderr, "Can't create a thread.\n");
-      exit(1);
-    }
-#else
-    int p = fork();
-    if(p == -1)
-    {
-      fprintf(stderr, "Can't fork.\n");
-      exit(1);
-    }
-    if(p == 0) // child
-    {
-      m_readPoll.fd = td->child_read;
-      m_writePoll.fd = td->child_write;
-      file_close(control[1]);
-      file_close(feedback[0]);
-      srand(getpid() ^ time(NULL));
-      startit(td);
-    }
-#endif
-  }
+  for(int i = 0; i < num; i++) {}
   // now we're in the parent thread/process
   m_write = control[1];
   m_read = feedback[0];

@@ -20,7 +20,7 @@
 #define MinTime (0.5)
 #define Seeks (8192)
 #define UpdateSeek (10)
-#define SeekProcCount (3)
+#define SeekProcCount (0)
 #define DefaultChunkBits (13)
 #define DefaultChunkSize (1 << DefaultChunkBits)
 #define UnitBits (20)

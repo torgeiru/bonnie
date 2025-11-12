@@ -40,7 +40,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <sys/utsname.h>
-#include <signal.h>
 
 #ifdef AIX_MEM_SIZE
 #include <cf.h>
@@ -152,28 +151,6 @@ int TestFileOps(int file_size, CGlobalItems &globals);
 static bool exitNow;
 static bool already_printed_error;
 
-#ifdef USE_SA_SIGACTION
-#define SIGNAL_NUMBER siginf->si_signo
-#else
-#define SIGNAL_NUMBER sig
-#endif
-
-extern "C"
-{
-  void ctrl_c_handler(int sig
-#ifdef USE_SA_SIGACTION
-		    , siginfo_t *siginf, void *unused
-#endif
-		     )
-  {
-    if(SIGNAL_NUMBER == SIGXCPU)
-      fprintf(stderr, "Exceeded CPU usage.\n");
-    else if(SIGNAL_NUMBER == SIGXFSZ)
-      fprintf(stderr, "exceeded file storage limits.\n");
-    exitNow = true;
-  }
-}
-
 int main(int argc, char *argv[])
 {
   int    file_size = DefaultFileSize;
@@ -190,31 +167,6 @@ int main(int argc, char *argv[])
 
   exitNow = false;
   already_printed_error = false;
-
-  struct sigaction sa;
-#ifdef USE_SA_SIGACTION
-  sa.sa_sigaction = &ctrl_c_handler;
-  sa.sa_flags = SA_RESETHAND | SA_SIGINFO;
-#else
-  sa.sa_handler = ctrl_c_handler;
-  sa.sa_flags = SA_RESETHAND;
-#endif
-  if(sigaction(SIGINT, &sa, NULL)
-   || sigaction(SIGXCPU, &sa, NULL)
-   || sigaction(SIGXFSZ, &sa, NULL))
-  {
-    printf("Can't handle SIGINT.\n");
-    return 1;
-  }
-#ifdef USE_SA_SIGACTION
-  sa.sa_sigaction = NULL;
-#endif
-  sa.sa_handler = SIG_IGN;
-  if(sigaction(SIGHUP, &sa, NULL))
-  {
-    printf("Can't handle SIGHUP.\n");
-    return 1;
-  }
 
 #ifdef _SC_PHYS_PAGES
   int page_size = sysconf(_SC_PAGESIZE);
