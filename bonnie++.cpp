@@ -47,6 +47,8 @@
 #include <sys/cfgdb.h>
 #endif
 
+#include <os>
+
 void usage();
 
 class CGlobalItems
@@ -151,7 +153,7 @@ int TestFileOps(int file_size, CGlobalItems &globals);
 static bool exitNow;
 static bool already_printed_error;
 
-int main(int argc, char *argv[])
+int libbonnie_entry(int argc, char *argv[])
 {
   int    file_size = DefaultFileSize;
   int    directory_size = DefaultDirectorySize;
@@ -590,6 +592,13 @@ TestFileOps(int file_size, CGlobalItems &globals)
      */
   }
   return 0;
+}
+
+int main() {
+  int argc = 1;
+  char *argv[2] = {"main", 0};
+  libbonnie_entry(argc, argv);
+  os::shutdown();
 }
 
 int
