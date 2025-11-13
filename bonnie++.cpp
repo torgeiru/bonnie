@@ -321,11 +321,6 @@ int libbonnie_entry(int argc, char *argv[])
     if(userName)
       free(userName);
   }
-  else if(geteuid() == 0)
-  {
-    fprintf(stderr, "You must use the \"-u\" switch when running as root.\n");
-    usage();
-  }
 
   if(num_bonnie_procs && globals.sync_bonnie)
     usage();
@@ -596,7 +591,7 @@ TestFileOps(int file_size, CGlobalItems &globals)
 
 int main() {
   int argc = 1;
-  char *argv[2] = {"main", 0};
+  char *argv[2] = {"main", nullptr};
   libbonnie_entry(argc, argv);
   os::shutdown();
 }
