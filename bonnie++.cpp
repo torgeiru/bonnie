@@ -137,7 +137,7 @@ CGlobalItems::CGlobalItems(bool *exitFlag)
  , m_buf_pa(NULL)
 {
   pa_new(m_chunk_size, m_buf, m_buf_pa);
-  SetName(".");
+  SetName("VirtioFS0");
 }
 
 void CGlobalItems::decrement_and_wait(int nr_sem)
@@ -295,6 +295,7 @@ int libbonnie_entry(int argc, char *argv[])
 #endif
     }
   }
+
   if(optind < argc)
     usage();
 
@@ -565,8 +566,8 @@ TestFileOps(int file_size, CGlobalItems &globals)
     if(!globals.quiet) fprintf(stderr, "done\n");
 
     globals.timer.timestamp();
-    if(file.seek_test(globals.quiet, globals.sem))
-      return 1;
+    // if(file.seek_test(globals.quiet, globals.sem))
+    //   return 1;
 
     /*
      * Now test random seeks; first, set up for communicating with children.
@@ -590,8 +591,8 @@ TestFileOps(int file_size, CGlobalItems &globals)
 }
 
 int main() {
-  int argc = 1;
-  char *argv[2] = {"main", nullptr};
+  char *argv[4] = {"main", "-n", "0", "-x", "3", nullptr};
+  int argc = 5;
   libbonnie_entry(argc, argv);
   os::shutdown();
 }

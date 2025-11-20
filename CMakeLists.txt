@@ -8,3 +8,4 @@ file(GLOB SRCS "*.cpp")
 
 os_add_executable(main "Bonnie++ bench" ${SRCS})
 os_add_stdout(main default_stdout)
+os_add_drivers(main virtiofs)
