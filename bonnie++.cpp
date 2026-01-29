@@ -591,8 +591,8 @@ TestFileOps(int file_size, CGlobalItems &globals)
 }
 
 int main() {
-  char *argv[4] = {"main", "-n", "0", "-x", "3", nullptr};
-  int argc = 5;
+  char *argv[5] = {"main", "-n", "0", "-D", nullptr};
+  int argc = 4;
   libbonnie_entry(argc, argv);
   os::shutdown();
 }
